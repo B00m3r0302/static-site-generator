@@ -1,3 +1,5 @@
+import re
+
 class HTMLNode:
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
@@ -42,3 +44,18 @@ class LeafNode(HTMLNode):
                     return f"<{self.tag}>{self.value}</{self.tag}>"
         except Exception as e:
             print(f"Error: {e}")
+
+class ParentNode(HTMLNode):
+    super().__init__(tag, children, props = None)
+
+    def .to_html(self):
+        if tag is "":
+            raise ValueError("You need a tag value for this function")
+        if children is None:
+            raise ValueError("No children found, chiildren are required")
+        tag = re.split('([><])', tag):
+        final = f"{tag[0]}"
+        counter = 0
+        while counter < len(children):
+        for child in children:
+        

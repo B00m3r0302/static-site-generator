@@ -39,6 +39,13 @@ class test_leafnode_to_html(unittest.TestCase):
             "<p>try harder my man</p>",
         )
 
+    def test_link(self):
+        da_props = {"href": "haha.com/image.png"}
+        self.assertNotEqual(
+            LeafNode(tag="a", value="try haha", props=da_props),
+            '<a href="haha.com/image.png">try haha</a>',
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
