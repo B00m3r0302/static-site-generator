@@ -1,4 +1,5 @@
 from enum import Enum
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TextType(Enum):
@@ -106,3 +107,25 @@ class TextNode:
             self.url = None
             return text
         return text
+
+
+def text_node_to_html_node(text_node):
+    try:
+        TextType(text_node.text_type)
+    except ValueError:
+        print("Value for the text type is not valid and not a supported type.")
+
+    if text_node.text_type == TextType.plain:
+        return LeafNode(value=text_node.text, tag=None)
+    if text_node.text_type == TextType.bold:
+        return LeafNode(value=text_node.text, tag="b")
+    if text_node.text_type == TextType.italic:
+        return LeafNode(value=text_node.text, tag="i")
+    if text_node.text_type == TextType.code:
+        return LeafNode(value=text_node.text, tag="code")
+    if text_node.text_type == TextType.links:
+        return LeafNode(value=text_node.text, tag="a", props={"href": text_node.url})
+    if text_node.text_type == TextType.images:
+        return LeafNode(
+            value="", tag="img", props={"src": text_node.url, "alt": text_node.text}
+        )

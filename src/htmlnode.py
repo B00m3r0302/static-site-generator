@@ -19,7 +19,7 @@ class HTMLNode:
             if self.props is None or len(self.props) == 0:
                 return ""
             else:
-                    result = ""
+                result = ""
                 for item in self.props:
                     result += f' {item}="{self.props[item]}"'
                 return result
@@ -30,7 +30,7 @@ class HTMLNode:
 
 class LeafNode(HTMLNode):
     def __init__(self, value, tag, props=None):
-        super().__init__(tag, value, props)
+        super().__init__(tag, value, None, props)
 
     def to_html(self):
         try:
@@ -40,7 +40,7 @@ class LeafNode(HTMLNode):
                 return str(self.value)
             else:
                 if self.props is not None:
-                    return f"<{self.tag} {self.props_to_html(self.props)}>{self.value}</{self.tag}>"
+                    return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
                 else:
                     return f"<{self.tag}>{self.value}</{self.tag}>"
         except Exception as e:
@@ -49,12 +49,23 @@ class LeafNode(HTMLNode):
 
 class ParentNode(HTMLNode):
     def __init__(self, tag, children, props=None):
-        super().__init__(tag, children, props)
+        super().__init__(tag, None, children, props)
 
     def to_html(self):
-        if self.tag is None:
-            raise ValueError("No tag found so we can't use the ParentNodeClass")
-        if self.children is not True:
-            raise ValueError("Children paramaters for ParentNode class are incomplete")
+        try:
+            if self.tag is None:
+                raise ValueError("No tag found so we can't use the ParentNodeClass")
+            if self.children is None or len(self.children) == 0:
+                raise ValueError(
+                    "Children paramaters for ParentNode class are incomplete"
+                )
 
+            start = f"<{self.tag}>"
+            end = f"</{self.tag}>"
 
+            for child in self.children:
+                start += child.to_html()
+            return start + end
+
+        except Exception as e:
+            print(f"Error: {e}")
