@@ -1,5 +1,6 @@
 from textnode import TextNode, TextType, text_node_to_html_node
 from htmlnode import HTMLNode, LeafNode, ParentNode
+import re
 
 
 def split_nodes_delimiter(old_nodes, delimiter):
@@ -11,3 +12,13 @@ def split_nodes_delimiter(old_nodes, delimiter):
             tm = [sp[item]]
             new_list.append(tm)
     return new_list
+
+
+def extract_markdown_images(text):
+    image_pattern = re.findall(r"\!\[(.*?)\]\((.*?)\)", text)
+    return image_pattern
+
+
+def extract_markdown_links(text):
+    link_pattern = re.findall(r"\[(.*?)\]\((.*?)\)", text)
+    return link_pattern
