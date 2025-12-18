@@ -3,14 +3,22 @@ from htmlnode import HTMLNode, LeafNode, ParentNode
 import re
 
 
-def split_nodes_delimiter(old_nodes, delimiter):
+def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_list = []
 
     for node in old_nodes:
+        if node.text_type != TextType.plain:
+            new_list.append(node)
+            continue
+
         sp = node.text.split(delimiter)
-        for item in range(0, len(sp)):
-            tm = [sp[item]]
-            new_list.append(tm)
+        for i in range(len(sp)):
+            if sp[i] == "":
+                continue
+            if i % 2 == 0:
+                new_list.append(TextNode(sp[i], TextType.plain))
+            else:
+                new_list.append(TextNode(sp[i], text_type))
     return new_list
 
 

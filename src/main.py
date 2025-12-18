@@ -1,3 +1,3 @@
-from textnode import TextNode
+from textnode import TextNode, TextType
 
-print(TextNode("![lalala](https://circlebuddy.com)"))
+print(TextNode("lalala", TextType.images, "https://circlebuddy.com"))
