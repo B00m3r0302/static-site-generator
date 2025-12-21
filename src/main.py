@@ -54,10 +54,23 @@ def generate_page(from_path, template_path, dest_path):
         dest_file.write(template_content)
 
 
-def main():
-    copy_to("static", "public")
-    generate_page("content/index.md", "template.html", "public/index.html")
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for item in os.listdir(dir_path_content):
+        src_path = os.path.join(dir_path_content, item)
 
+        if os.path.isdir(src_path):
+            # recursively process subdirectories
+            dest_subdir = os.path.join(dest_dir_path, item)
+            generate_pages_recursive(src_path, template_path, dest_subdir)
+        elif item.endswith('.md'):
+            # convert .md extension to .html for destination
+            html_filename = item[:-3] + '.html'
+            dest_path = os.path.join(dest_dir_path, html_filename)
+            generate_page(src_path, template_path, dest_path)
+
+
+def main():
+    generate_pages_recursive("content", "template.html", "public")
 
 if __name__ == "__main__":
     main()
