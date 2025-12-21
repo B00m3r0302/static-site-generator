@@ -1,5 +1,6 @@
 import os
 import shutil
+import re
 
 
 def copy_to(source, destination):
@@ -20,3 +21,19 @@ def copy_to(source, destination):
             copy_to(src_path, dst_path)
         else:
             shutil.copy2(src_path, dst_path)
+
+
+def extract_title(markdown):
+    header = re.match(r"^\# (.*?)$", markdown, re.MULTILINE)
+    if not header:
+        raise Exception("Couldn't find a header for the markdown file")
+    else:
+        return header.group(1).strip()
+
+
+def main():
+    copy_to("static", "public")
+
+
+if __name__ == "__main__":
+    main()

@@ -2,6 +2,7 @@ import unittest
 
 from markdown_mod import markdown_to_blocks, markdown_to_html_node
 from blocknode import block_to_block_type, BlockType
+from main import extract_title
 
 
 class TestMarkdownToBlocks(unittest.TestCase):
@@ -178,6 +179,56 @@ the **same** even with inline stuff
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+
+class TestExtractTitle(unittest.TestCase):
+    def test_extract_title_h1(self):
+        md = "# Hello World"
+        title = extract_title(md)
+        self.assertEqual(title, "Hello World")
+
+    def test_extract_title_with_text_after(self):
+        md = "# My Title\n\nSome paragraph text"
+        title = extract_title(md)
+        self.assertEqual(title, "My Title")
+
+    def test_extract_title_with_special_chars(self):
+        md = "# Title with **bold** and _italic_"
+        title = extract_title(md)
+        self.assertEqual(title, "Title with **bold** and _italic_")
+
+    def test_extract_title_no_header(self):
+        md = "Just some text without a header"
+        with self.assertRaises(Exception) as context:
+            extract_title(md)
+        self.assertEqual(
+            str(context.exception), "Couldn't find a header for the markdown file"
+        )
+
+    def test_extract_title_h2_not_h1(self):
+        md = "## This is h2, not h1"
+        with self.assertRaises(Exception) as context:
+            extract_title(md)
+        self.assertEqual(
+            str(context.exception), "Couldn't find a header for the markdown file"
+        )
+
+    def test_extract_title_empty_string(self):
+        md = ""
+        with self.assertRaises(Exception) as context:
+            extract_title(md)
+        self.assertEqual(
+            str(context.exception), "Couldn't find a header for the markdown file"
+        )
+
+    def test_extract_title_whitespace_before(self):
+        md = "   # Title with leading whitespace"
+        with self.assertRaises(Exception) as context:
+            extract_title(md)
+        self.assertEqual(
+            str(context.exception), "Couldn't find a header for the markdown file"
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
